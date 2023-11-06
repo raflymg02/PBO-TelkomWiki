@@ -17,7 +17,7 @@ public class WikiPage {
     private LocalDateTime updatedAt;
     //Tagged tags;
 
-    public WikiPage(String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public WikiPage(String title, String content, LocalDateTime createdAt) {
         this.title = title;
         this.content = content;
         this.createdAt = createdAt;
