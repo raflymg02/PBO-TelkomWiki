@@ -1,5 +1,7 @@
 package telkomwiki;
 
+import java.util.Arrays;
+
 public class Tagged {
     private WikiPage[] pages;
     private Tag[] tags;
