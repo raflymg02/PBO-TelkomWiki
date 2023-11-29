@@ -1,67 +1,74 @@
 package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-// import javax.swing.JButton;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
-public class MainPage implements ActionListener {
-    JFrame frame = new JFrame();
-    // JButton myButton = new JButton("New Window");
+public class MainPage extends JFrame implements ActionListener {
+    // JFrame frame = new JFrame();
     JMenuBar menuBar = new JMenuBar();
     JMenuItem exitItem;
     JMenuItem searchItem;
+    JPanel container = new JPanel();
+    JList<String> countryList;
+    JLabel title = new JLabel();
+    JLabel desc = new JLabel();
+    JButton goBtn = new JButton("Go");
 
     MainPage() {
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setTitle("Telkom Wiki");
-        frame.setSize(800, 600);
-        // frame.setLayout(new FlowLayout());
-        frame.setLayout(new BorderLayout());
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Telkom Wiki");
+        setSize(800, 600);
+        menuBar();
+        getContentPane().add(container);
+        container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+        leftPanel();
+        rightPanel();
 
-        JLabel title = new JLabel();
-        title.setText("Judul Wiki");
-        title.setHorizontalAlignment(JLabel.LEFT);
-        title.setVerticalAlignment(JLabel.TOP);
-        // frame.add(title);
+        setVisible(true);
 
-        JLabel desc = new JLabel();
-        desc.setText("Deskripsi Wiki");
-        desc.setHorizontalAlignment(JLabel.LEFT);
-        desc.setVerticalAlignment(JLabel.TOP);
-        // frame.add(desc);
+    }
 
-        JPanel leftPanel = new JPanel();
-        leftPanel.setBackground(Color.BLACK);
-        leftPanel.setPreferredSize(new Dimension(300, 100));
-        frame.add(leftPanel, BorderLayout.WEST);
-
+    public void rightPanel() {
         JPanel rightPanel = new JPanel();
-        // rightPanel.setBackground(Color.YELLOW);
-        // rightPanel.setPreferredSize(new Dimension(300, 100));
-        rightPanel.setLayout(new BorderLayout());
-        rightPanel.add(title, BorderLayout.NORTH);
-        rightPanel.add(desc, BorderLayout.SOUTH);
-        frame.add(rightPanel, BorderLayout.EAST);
+        rightPanel.setLayout(null);
+        rightPanel.setBackground(Color.WHITE);
+        // rightPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+        // "Login Panel"));
 
-        // myButton.setBounds(100, 160, 200, 40);
-        // myButton.setFocusable(false);
-        // myButton.addActionListener(this);
+        title.setText(countryList.getSelectedValue());
+        title.setFont(new Font("Calibri", Font.BOLD, 30));
+        title.setSize(300, 50);
+        title.setLocation(10, 0);
 
-        // frame.add(myButton);
+        desc.setText("Deskripsi Wiki untuk " + countryList.getSelectedValue());
+        desc.setSize(200, 30);
+        desc.setLocation(10, 50);
 
-        frame.setJMenuBar(menuBar);
+        rightPanel.add(title);
+        rightPanel.add(desc);
+
+        container.add(rightPanel);
+    }
+
+    public void menuBar() {
+        setJMenuBar(menuBar);
         JMenu fileMenu = new JMenu("File");
         JMenu searchMenu = new JMenu("Search");
         // JMenu aboutMenu = new JMenu("About");
@@ -77,9 +84,42 @@ public class MainPage implements ActionListener {
         menuBar.add(fileMenu);
         menuBar.add(searchMenu);
         // menuBar.add(aboutMenu);
+    }
 
-        frame.setVisible(true);
+    public void leftPanel() {
+        JPanel leftPanel = new JPanel();
+        // leftPanel.setLayout(null);
+        leftPanel.setPreferredSize(new Dimension(200, 800));
+        leftPanel.setMaximumSize(leftPanel.getPreferredSize());
+        leftPanel.setMinimumSize(leftPanel.getPreferredSize());
+        leftPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+                "Category"));
 
+        // create the model and add elements
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        listModel.addElement("Category A");
+        listModel.addElement("Category B");
+        listModel.addElement("Category C");
+        listModel.addElement("Category D");
+        listModel.addElement("Category E");
+        listModel.addElement("Category F");
+        listModel.addElement("Category G");
+        listModel.addElement("Category H");
+
+        // create the list
+        countryList = new JList<>(listModel);
+        countryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        countryList.setSelectedIndex(0);
+        countryList.setFixedCellHeight(30);
+        countryList.setFixedCellWidth(180);
+
+        goBtn.addActionListener(this);
+
+        leftPanel.add(countryList);
+        leftPanel.add(new JScrollPane(countryList));
+        leftPanel.add(goBtn);
+
+        container.add(leftPanel);
     }
 
     @Override
@@ -92,6 +132,12 @@ public class MainPage implements ActionListener {
             System.out.println("Exit");
         } else if (e.getSource() == searchItem) {
             new SearchPage();
+        } else if (e.getSource() == goBtn) {
+            if (countryList.getSelectedIndex() != -1) {
+                title.setText(countryList.getSelectedValue());
+                desc.setText("Deskripsi Wiki untuk " + countryList.getSelectedValue());
+                System.out.println(countryList.getSelectedValue());
+            }
         }
     }
 }
