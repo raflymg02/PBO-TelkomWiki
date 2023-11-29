@@ -1,34 +1,39 @@
-] Pages ;
+/*
+ * Pas aku pull dari main udah kyk gini, jadi aku komentarin dulu biar ga ganggu
+ * errornya - Hex
+ */
 
-    public String getDescription() {
-        return description;
-    }
+// ] Pages ;
 
-    public Category getPartof() {
-        return partof;
-    }
+// public String getDescription() {
+// return description;
+// }
 
-    public Category[] getSubcategories() {
-        return subcategories;
-    }
+// public Category getPartof() {
+// return partof;
+// }
 
-    public WikiPage[] getPages() {
-        return Pages;
-    }
+// public Category[] getSubcategories() {
+// return subcategories;
+// }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+// public WikiPage[] getPages() {
+// return Pages;
+// }
 
-    public void setPartof(Category partof) {
-        this.partof = partof;
-    }
+// public void setDescription(String description) {
+// this.description = description;
+// }
 
-    public void setSubcategories(Category[] subcategories) {
-        this.subcategories = subcategories;
-    }
+// public void setPartof(Category partof) {
+// this.partof = partof;
+// }
 
-    public void setPages(WikiPage[] Pages) {
-        this.Pages = Pages;
-    }
-}
+// public void setSubcategories(Category[] subcategories) {
+// this.subcategories = subcategories;
+// }
+
+// public void setPages(WikiPage[] Pages) {
+// this.Pages = Pages;
+// }
+// }
