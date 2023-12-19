@@ -19,27 +19,39 @@ public class Database implements Searchable {
         return DriverManager.getConnection(url, username, password);
     }
 
-    public ArrayList<WikiPage> searchDatabase(String dbTable) {
-        ArrayList<WikiPage> pages = new ArrayList<>();
-        try (Connection connection = connect()) {
-            String query = "SELECT * FROM " + dbTable;
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                String title = resultSet.getString("title");
-                String content = resultSet.getString("content");
-                LocalDateTime createdAt = resultSet.getTimestamp("CreatedAt").toLocalDateTime();
-                LocalDateTime updatedAt = resultSet.getTimestamp("updatedAt").toLocalDateTime();
-
-                WikiPage page = new WikiPage(title, content, createdAt, updatedAt);
-                pages.add(page);
+    public Object searchDatabase(String dbTable) {
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + dbTable);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+    
+            if ("Page".equals(dbTable)) {
+                ArrayList<WikiPage> pages = new ArrayList<>();
+                while (resultSet.next()) {
+                    String title = resultSet.getString("title");
+                    String content = resultSet.getString("content");
+                    LocalDateTime createdAt = resultSet.getTimestamp("CreatedAt").toLocalDateTime();
+                    LocalDateTime updatedAt = resultSet.getTimestamp("updatedAt").toLocalDateTime();
+    
+                    WikiPage page = new WikiPage(title, content, createdAt, updatedAt);
+                    pages.add(page);
+                }
+                return pages;
+            } else if ("Tag".equals(dbTable)) {
+                ArrayList<Tag> tags = new ArrayList<>();
+                while (resultSet.next()) {
+                    String tagName = resultSet.getString("tagName");
+                    String tagDesc = resultSet.getString("tagDescription");
+                    Tag tag = new Tag(tagName, tagDesc);
+                    tags.add(tag);
+                }
+                return tags;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return pages;
+        return null;
     }
+    
 
 
 

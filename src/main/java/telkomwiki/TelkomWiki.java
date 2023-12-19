@@ -13,10 +13,26 @@ public class TelkomWiki {
      */
     public static void main(String[] args){
         Database db = new Database();
-        ArrayList<WikiPage> pages = db.searchDatabase("Page");
+        Object Page = db.searchDatabase("Page");
 
-        for (WikiPage page : pages) {
-            System.out.println(page.toString()); // Can get each variable 
+        if (Page instanceof ArrayList<?>) {
+            ArrayList<?> pageList = (ArrayList<?>) Page;
+            for (Object obj : pageList) {
+                System.out.println(obj.toString()); // Can get each attribute with getter
+            }
+        } else {
+            System.out.println("PageObject is not an ArrayList.");
+        }
+
+        Object Tag = db.searchDatabase("Tag");
+
+        if (Tag instanceof ArrayList<?>) {
+            ArrayList<?> tagList = (ArrayList<?>) Tag;
+            for (Object obj : tagList) {
+                System.out.println(obj.toString()); //Can get each attribute with getter
+            }
+        } else {
+            System.out.println("TagObject is not an ArrayList.");
         }
 
 

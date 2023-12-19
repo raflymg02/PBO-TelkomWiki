@@ -55,9 +55,9 @@ public class WikiPage {
     }
 
     public String toString() {
-        return "Created At: " + createdAt + " updatedAt: " + updatedAt +
+        return "Created At: " + createdAt + " updatedAt: " + updatedAt +  '\'' +
                 title + '\'' +
-                content + '\'';
+                content;
     }
     
     

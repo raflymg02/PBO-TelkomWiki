@@ -13,6 +13,6 @@ public class Tag extends Organization{
         this.description = description;
     }
     public String toString() {
-        return "Tag{" +"name='" + getName() + '\'' +", description='" + description + '\'' +'}';
+        return "Tag: " + getName() + '\'' +"Description: " + getDescription();
     }
 }
