@@ -17,11 +17,11 @@ public class WikiPage {
     private LocalDateTime updatedAt;
     //Tagged tags;
 
-    public WikiPage(String title, String content, LocalDateTime createdAt) {
+    public WikiPage(String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.title = title;
         this.content = content;
         this.createdAt = createdAt;
-        this.setUpdatedAt();
+        this.updatedAt = updatedAt;
     }
 
     public String getTitle() {
@@ -52,6 +52,12 @@ public class WikiPage {
 
     public void setUpdatedAt() {
         this.updatedAt = java.time.LocalDateTime.now();
+    }
+
+    public String toString() {
+        return "Created At: " + createdAt + " updatedAt: " + updatedAt +
+                title + '\'' +
+                content + '\'';
     }
     
     

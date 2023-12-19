@@ -1,7 +1,6 @@
 package telkomwiki;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 /**
  *
@@ -13,12 +12,12 @@ public class TelkomWiki {
      * @param args the command line arguments
      */
     public static void main(String[] args){
-        /* Format */
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        String formattedDateTime = currentDateTime.format(formatter);
+        Database db = new Database();
+        ArrayList<WikiPage> pages = db.searchDatabase("Page");
 
-        WikiPage page1 = new WikiPage("Linked List", "Lorem Ipsum", LocalDateTime.parse(formattedDateTime, formatter));
+        for (WikiPage page : pages) {
+            System.out.println(page.toString()); // Can get each variable 
+        }
 
 
 
