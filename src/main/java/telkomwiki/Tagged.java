@@ -1,27 +1,31 @@
 package telkomwiki;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+//import java.util.Arrays;
 
 public class Tagged {
-    private WikiPage[] pages;
-    private Tag[] tags;
-    public Tagged(WikiPage[] pages, Tag[] tags) {
-        this.pages = pages;
-        this.tags = tags;
-    }
-    public WikiPage[] getPages(){
+    
+    private ArrayList<WikiPage> pages;
+    private ArrayList<Tag> tags;
+
+    public ArrayList<WikiPage> getPages(){
         return pages;
     }
-    public void setPages(WikiPage[] pages) {
+    public void setPages(ArrayList<WikiPage> pages) {
         this.pages = pages;
     }
-    public Tag[] getTags() {
+    public ArrayList<Tag> getTags() {
         return tags;
     }
-    public void setTags(Tag[] tags) {
+    public void setTags(ArrayList<Tag> tags) {
         this.tags = tags;
     }
-    public String toString() {
-        return "Tagged{" +"pages=" + Arrays.toString(pages) +", tags=" + Arrays.toString(tags) +'}';
+
+    public void addTags(Tag tag){
+        this.tags.add(tag);
     }
+
+    //public String toString() {
+    //    return "Tagged{" +"pages=" + Arrays.toString(pages) +", tags=" + Arrays.toString(tags) +'}';
+    //}
 }
