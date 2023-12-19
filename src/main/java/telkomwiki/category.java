@@ -6,8 +6,9 @@ public class Category extends Organization{
     private Category partof;
     private ArrayList<WikiPage> pages;
 
-    public Category(String name){
+    public Category (String description, String name){
         super(name);
+        this.description = description;
     }
 
     public void setDescription(String description) {
@@ -33,38 +34,8 @@ public class Category extends Organization{
     public void addPage(WikiPage page){
         this.pages.add(page);
     }
+
+    public void removePage(WikiPage page){
+        this.pages.remove(page);
+    }
 }
-// ] Pages ;
-
-// public String getDescription() {
-// return description;
-// }
-
-// public Category getPartof() {
-// return partof;
-// }
-
-// public Category[] getSubcategories() {
-// return subcategories;
-// }
-
-// public WikiPage[] getPages() {
-// return Pages;
-// }
-
-// public void setDescription(String description) {
-// this.description = description;
-// }
-
-// public void setPartof(Category partof) {
-// this.partof = partof;
-// }
-
-// public void setSubcategories(Category[] subcategories) {
-// this.subcategories = subcategories;
-// }
-
-// public void setPages(WikiPage[] Pages) {
-// this.Pages = Pages;
-// }
-// }
