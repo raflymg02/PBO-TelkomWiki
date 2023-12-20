@@ -1,7 +1,6 @@
 package telkomwiki;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 /**
  *
@@ -13,12 +12,28 @@ public class TelkomWiki {
      * @param args the command line arguments
      */
     public static void main(String[] args){
-        /* Format */
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        String formattedDateTime = currentDateTime.format(formatter);
+        Database db = new Database();
+        Object Page = db.searchDatabase("Page");
 
-        WikiPage page1 = new WikiPage("Linked List", "Lorem Ipsum", LocalDateTime.parse(formattedDateTime, formatter));
+        if (Page instanceof ArrayList<?>) {
+            ArrayList<?> pageList = (ArrayList<?>) Page;
+            for (Object obj : pageList) {
+                System.out.println(obj.toString()); // Can get each attribute with getter
+            }
+        } else {
+            System.out.println("PageObject is not an ArrayList.");
+        }
+
+        Object Tag = db.searchDatabase("Tag");
+
+        if (Tag instanceof ArrayList<?>) {
+            ArrayList<?> tagList = (ArrayList<?>) Tag;
+            for (Object obj : tagList) {
+                System.out.println(obj.toString()); //Can get each attribute with getter
+            }
+        } else {
+            System.out.println("TagObject is not an ArrayList.");
+        }
 
 
 
