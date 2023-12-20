@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class Category extends Organization{
     private String description;
     private Category partof;
-    private ArrayList<WikiPage> pages;
+    private ArrayList<WikiPage> pageList;
 
     public Category (String description, String name){
         super(name);
@@ -27,15 +27,15 @@ public class Category extends Organization{
         this.partof = partof;
     }
 
-    public ArrayList<WikiPage> getPages() {
-        return this.pages;
+    public ArrayList<WikiPage> getPageList() {
+        return this.pageList;
     }
 
     public void addPage(WikiPage page){
-        this.pages.add(page);
+        this.pageList.add(page);
     }
 
     public void removePage(WikiPage page){
-        this.pages.remove(page);
+        this.pageList.remove(page);
     }
 }
