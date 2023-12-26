@@ -1,4 +1,4 @@
-package telkomwiki;
+package Model;
 
 public class Course extends Category {
     private String code;
