@@ -1,4 +1,4 @@
-package telkomwiki;
+package Model;
 
 import java.sql.Connection;
 

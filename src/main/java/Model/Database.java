@@ -1,4 +1,4 @@
-package telkomwiki;
+package Model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -78,7 +78,7 @@ public class Database implements Searchable {
     }
     
     public void searchWikiTitle(Connection conn, String title) {
-        String sql = "SELECT title, content FROM wikipage WHERE title = ?";
+        String sql = "SELECT title, content FROM Page WHERE title = ?";
         
         try (PreparedStatement prst = conn.prepareStatement(sql)) {
             prst.setString(1, title);
