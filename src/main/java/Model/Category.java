@@ -1,10 +1,22 @@
 package Model;
 import java.util.ArrayList;
 
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.MappedSuperclass;
+
+
+
+@MappedSuperclass
 public class Category extends Organization{
     private String description;
     private Category partof;
     private ArrayList<WikiPage> pageList;
+
+    public Category() {
+        //
+    }
 
     public Category (String description, String name){
         super(name);

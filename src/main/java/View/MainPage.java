@@ -21,7 +21,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
+import Controller.CourseController;
 import Controller.WikiPageController;
+import Model.Course;
 import Model.WikiPage;
 
 public class MainPage extends JFrame implements ActionListener {
@@ -101,15 +103,20 @@ public class MainPage extends JFrame implements ActionListener {
 
         // create the model and add elements
         DefaultListModel<String> listModel = new DefaultListModel<>();
-        listModel.addElement("Category A");
-        listModel.addElement("Category B");
-        listModel.addElement("Category C");
-        listModel.addElement("Category D");
-        listModel.addElement("Category E");
-        listModel.addElement("Category F");
-        listModel.addElement("Category G");
-        listModel.addElement("Category H");
+        listModel.clear();
 
+        CourseController controller = new CourseController();
+        List<Course> courses = controller.getAllCourses();
+
+        for (Course course : courses) {
+            String name = course.getName();
+            String description = course.getDescription();
+            
+            System.out.println("Course Name: " + name);
+            System.out.println("Course Description: " + description);
+            
+            listModel.addElement(name + ": " + description); // Add both name and description to the listModel
+        }
         // create the list
         countryList = new JList<>(listModel);
         countryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

@@ -24,7 +24,10 @@
         
         <!-- Mapping configuration -->
         <!-- Add all your entity mappings here -->
+        <mapping class="Model.Category" />
         <mapping class="Model.Database" />
+        <mapping class="Model.Course" />
+        <mapping class="Model.Organization" />
         <mapping class="Model.WikiPage" />
         <mapping class="Model.Tag" />
         <!-- Add other entity mappings as needed -->

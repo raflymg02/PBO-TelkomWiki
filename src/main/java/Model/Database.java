@@ -52,5 +52,13 @@ public class Database {
         return null;
     }
 
-    // Other methods for specific Hibernate operations as needed
+    public List<Course> fetchAllCourses() {
+        try (Session session = sessionFactory.openSession()) {
+            Query<Course> query = session.createQuery("FROM Course", Course.class);
+            return query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return List.of(); // Return an empty list using Java 9+ List.of()
+    }
 }
