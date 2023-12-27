@@ -43,7 +43,6 @@ public class SearchPage implements ActionListener {
             String searchText = textField.getText();
 
             WikiPageController controller = new WikiPageController();
-
             WikiPage wikiPage = controller.searchWikiPageByTitle(searchText);
 
             if (wikiPage != null) {

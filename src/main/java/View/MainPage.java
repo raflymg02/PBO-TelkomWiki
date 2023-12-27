@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -19,6 +20,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+
+import Controller.WikiPageController;
+import Model.WikiPage;
 
 public class MainPage extends JFrame implements ActionListener {
     // JFrame frame = new JFrame();
@@ -137,7 +141,18 @@ public class MainPage extends JFrame implements ActionListener {
                 title.setText(countryList.getSelectedValue());
                 desc.setText("Deskripsi Wiki untuk " + countryList.getSelectedValue());
                 System.out.println(countryList.getSelectedValue());
+    
+                // Fetch all WikiPages and display them
+                WikiPageController controller = new WikiPageController();
+                List<WikiPage> wikiPages = controller.getAllWikiPages();
+
+                // Handle the retrieved list of WikiPages as needed
+                for (WikiPage wikiPage : wikiPages) {
+                    // Process each WikiPage (you might display them or perform other operations)
+                    System.out.println("Title: " + wikiPage.getTitle() + ", Content: " + wikiPage.getContent());
+                }
             }
         }
+        
     }
 }
