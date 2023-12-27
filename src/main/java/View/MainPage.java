@@ -27,6 +27,7 @@ import javax.swing.ListSelectionModel;
 
 import Controller.CourseController;
 import Model.Course;
+import Model.WikiPage;
 
 public class MainPage extends JFrame implements ActionListener {
     // JFrame frame = new JFrame();
@@ -40,7 +41,11 @@ public class MainPage extends JFrame implements ActionListener {
     JLabel desc = new JLabel();
     JButton goBtn = new JButton("Go");
 
+    // Connect to Controller
+    CourseController controller;
+
     MainPage() {
+        controller = new CourseController(); // Initialize the controller
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Telkom Wiki");
         setSize(800, 600);
@@ -93,6 +98,16 @@ public class MainPage extends JFrame implements ActionListener {
         subBab.add(setGetSubBabLabel("Topik 2"));
         subBab.add(setGetSubBabLabel("Topik 3"));
         subBab.add(setGetSubBabLabel("Topik 4"));
+
+        String selectedCourseName = matkulList.getSelectedValue();
+        List<WikiPage> wikiPages = controller.getWikiPagesByCourseName(selectedCourseName);
+
+        for (WikiPage wikiPage : wikiPages) {
+            // Process retrieved wiki pages here
+            System.out.println("WikiPage Title: " + wikiPage.getTitle());
+            System.out.println("WikiPage Content: " + wikiPage.getContent());
+        }
+        
 
         panel.add(title);
         JLabel text = new JLabel();
@@ -166,9 +181,10 @@ public class MainPage extends JFrame implements ActionListener {
         List<Course> courses = controller.getAllCourses();
 
         for (Course course : courses) {
-            System.out.println(course.getName());
             listModel.addElement(course.getName()); // Add both name and description to the listModel
         }
+        // creat
+
         // create the list
         matkulList = new JList<>(listModel);
         matkulList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -196,10 +212,18 @@ public class MainPage extends JFrame implements ActionListener {
         } else if (e.getSource() == searchItem) {
             new SearchPage();
         } else if (e.getSource() == goBtn) {
-            if (countryList.getSelectedIndex() != -1) {
-                title.setText(countryList.getSelectedValue());
-                desc.setText("Deskripsi Wiki untuk " + countryList.getSelectedValue());
-                System.out.println(countryList.getSelectedValue());
+            if (matkulList.getSelectedIndex() != -1) {
+                title.setText(matkulList.getSelectedValue());
+                desc.setText("Deskripsi Wiki untuk " + matkulList.getSelectedValue());
+                System.out.println(matkulList.getSelectedValue());
+                String selectedCourseName = matkulList.getSelectedValue();
+                List<WikiPage> wikiPages = controller.getWikiPagesByCourseName(selectedCourseName);
+
+                for (WikiPage wikiPage : wikiPages) {
+                    // Process retrieved wiki pages here
+                    System.out.println("WikiPage Title: " + wikiPage.getTitle());
+                    System.out.println("WikiPage Content: " + wikiPage.getContent());
+                }
             }
         }
     }

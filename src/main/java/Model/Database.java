@@ -90,18 +90,48 @@ public class Database {
         return courses;
     }
 
-    public WikiPage fetchWikiPageByCode(String code) {
-        try (Session session = sessionFactory.openSession()) {
-            Query<WikiPage> query = session.createQuery(
-                    "SELECT wp FROM WikiPage wp JOIN Course c ON wp.courseId = c.code WHERE c.code = :code",
-                    WikiPage.class
-            );
-            query.setParameter("code", code);
-            return query.uniqueResult();
-        } catch (Exception e) {
+    public List<WikiPage> fetchWikiPagesByCourseName(String courseName) {
+        List<WikiPage> wikiPages = new ArrayList<>();
+
+        try (Connection connection = getJDBCConnection()) {
+            // Prepare a PreparedStatement to fetch Course based on name
+            String selectCourseQuery = "SELECT * FROM Course WHERE name = ?";
+            PreparedStatement courseStatement = connection.prepareStatement(selectCourseQuery);
+            courseStatement.setString(1, courseName);
+
+            ResultSet courseResult = courseStatement.executeQuery();
+
+            if (courseResult.next()) {
+                String courseCode = courseResult.getString("code");
+
+                // Prepare a PreparedStatement to fetch WikiPages based on courseId
+                String selectWikiPagesQuery = "SELECT * FROM WikiPage WHERE courseCode = ?";
+                PreparedStatement wikiStatement = connection.prepareStatement(selectWikiPagesQuery);
+                wikiStatement.setString(1, courseCode);
+
+                ResultSet wikiResult = wikiStatement.executeQuery();
+
+                while (wikiResult.next()) {
+                    // Create WikiPage objects based on retrieved data
+                    WikiPage wikiPage = new WikiPage();
+                    wikiPage.setTitle(wikiResult.getString("title"));
+                    wikiPage.setContent(wikiResult.getString("content"));
+                    // Set other attributes as needed
+
+                    wikiPages.add(wikiPage);
+                }
+
+                wikiStatement.close();
+            }
+
+            courseStatement.close();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+
+        return wikiPages;
     }
+    
+    
     
 }

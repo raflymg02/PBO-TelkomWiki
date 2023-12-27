@@ -17,7 +17,8 @@ public class CourseController {
         return database.fetchAllCourses();
     }
 
-    public WikiPage getWikiPageByCode(String code) {
-        return database.fetchWikiPageByCode(code);
+    public List<WikiPage> getWikiPagesByCourseName(String courseName) {
+        return database.fetchWikiPagesByCourseName(courseName);
     }
+    
 }
