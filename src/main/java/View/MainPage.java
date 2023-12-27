@@ -6,7 +6,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -22,7 +25,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import org.w3c.dom.events.MouseEvent;
+import Controller.CourseController;
+import Model.Course;
 
 public class MainPage extends JFrame implements ActionListener {
     // JFrame frame = new JFrame();
@@ -156,15 +160,15 @@ public class MainPage extends JFrame implements ActionListener {
 
         // create the model and add elements
         DefaultListModel<String> listModel = new DefaultListModel<>();
-        listModel.addElement("Category A");
-        listModel.addElement("Category B");
-        listModel.addElement("Category C");
-        listModel.addElement("Category D");
-        listModel.addElement("Category E");
-        listModel.addElement("Category F");
-        listModel.addElement("Category G");
-        listModel.addElement("Category H");
+        listModel.clear();
 
+        CourseController controller = new CourseController();
+        List<Course> courses = controller.getAllCourses();
+
+        for (Course course : courses) {
+            System.out.println(course.getName());
+            listModel.addElement(course.getName()); // Add both name and description to the listModel
+        }
         // create the list
         matkulList = new JList<>(listModel);
         matkulList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
