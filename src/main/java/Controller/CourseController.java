@@ -4,6 +4,7 @@ import java.util.List;
 
 import Model.Course;
 import Model.Database;
+import Model.WikiPage;
 
 public class CourseController {
     private final Database database;
@@ -13,6 +14,10 @@ public class CourseController {
     }
 
     public List<Course> getAllCourses() {
-        return database.fetchAllCourses(); // Corrected method call to fetch courses
+        return database.fetchAllCourses();
+    }
+
+    public WikiPage getWikiPageByCode(String code) {
+        return database.fetchWikiPageByCode(code);
     }
 }

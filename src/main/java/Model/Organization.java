@@ -5,7 +5,6 @@
  */
 package Model;
 
-import jakarta.persistence.Column;
 
 /**
  *

@@ -26,4 +26,6 @@ public class WikiPageController {
     public WikiPage searchWikiPageByTitle(String title) {
         return database.fetchWikiPageByTitle(title);
     }
+
+
 }

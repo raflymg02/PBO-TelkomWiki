@@ -1,9 +1,6 @@
 package Model;
 import java.util.ArrayList;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
 
@@ -22,6 +19,7 @@ public class Category extends Organization{
         super(name);
         this.description = description;
     }
+
 
     public void setDescription(String description) {
         this.description = description;

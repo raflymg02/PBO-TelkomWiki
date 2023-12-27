@@ -1,5 +1,11 @@
 package Model;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -9,6 +15,9 @@ import org.hibernate.query.Query;
 
 public class Database {
     private final SessionFactory sessionFactory;
+    private final String jdbcURL = "jdbc:mysql://pbo.akunerio.com:3306/pbo-db-one";
+    private final String username = "pbo-user-one";
+    private final String password = "pbo-pass-one-01";
 
     public Database() {
         this.sessionFactory = new Configuration().configure("hibernate.cfg.xml")
@@ -16,6 +25,10 @@ public class Database {
                 .addAnnotatedClass(Tag.class)
                 // Add other annotated classes as needed
                 .buildSessionFactory();
+    }
+
+    private Connection getJDBCConnection() throws SQLException {
+        return DriverManager.getConnection(jdbcURL, username, password);
     }
 
     // Method to fetch all WikiPages using Hibernate
@@ -53,12 +66,42 @@ public class Database {
     }
 
     public List<Course> fetchAllCourses() {
+        List<Course> courses = new ArrayList<>();
+        String sql = "SELECT * FROM Course"; // Define the SQL query
+    
+        try (Connection connection = DriverManager.getConnection(jdbcURL, username, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    
+            ResultSet resultSet = preparedStatement.executeQuery();
+    
+            // Process the retrieved data and create Course objects
+            while (resultSet.next()) {
+                String code = resultSet.getString("code");
+                String name = resultSet.getString("name");
+                String description = resultSet.getString("description");
+    
+                Course course = new Course(description, name, code);
+                courses.add(course);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return courses;
+    }
+
+    public WikiPage fetchWikiPageByCode(String code) {
         try (Session session = sessionFactory.openSession()) {
-            Query<Course> query = session.createQuery("FROM Course", Course.class);
-            return query.getResultList();
+            Query<WikiPage> query = session.createQuery(
+                    "SELECT wp FROM WikiPage wp JOIN Course c ON wp.courseId = c.code WHERE c.code = :code",
+                    WikiPage.class
+            );
+            query.setParameter("code", code);
+            return query.uniqueResult();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return List.of(); // Return an empty list using Java 9+ List.of()
+        return null;
     }
+    
 }
