@@ -1,11 +1,12 @@
 package View;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -21,10 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import Controller.CourseController;
-import Controller.WikiPageController;
-import Model.Course;
-import Model.WikiPage;
+import org.w3c.dom.events.MouseEvent;
 
 public class MainPage extends JFrame implements ActionListener {
     // JFrame frame = new JFrame();
@@ -32,7 +30,8 @@ public class MainPage extends JFrame implements ActionListener {
     JMenuItem exitItem;
     JMenuItem searchItem;
     JPanel container = new JPanel();
-    JList<String> countryList;
+    JList<String> matkulList;
+    JList<String> matkulList2;
     JLabel title = new JLabel();
     JLabel desc = new JLabel();
     JButton goBtn = new JButton("Go");
@@ -46,31 +45,85 @@ public class MainPage extends JFrame implements ActionListener {
         container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
         leftPanel();
         rightPanel();
-
         setVisible(true);
 
     }
 
-    public void rightPanel() {
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(null);
-        rightPanel.setBackground(Color.WHITE);
-        // rightPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-        // "Login Panel"));
+    // public void rightPanel() {
+    // JPanel rightPanel = new JPanel();
+    // rightPanel.setLayout(null);
+    // rightPanel.setBackground(Color.WHITE);
+    // //
+    // rightPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+    // // "Login Panel"));
 
-        title.setText(countryList.getSelectedValue());
+    // title.setText(countryList.getSelectedValue());
+    // title.setFont(new Font("Calibri", Font.BOLD, 30));
+    // title.setSize(300, 50);
+    // title.setLocation(10, 0);
+
+    // desc.setText("Deskripsi Wiki untuk " + countryList.getSelectedValue());
+    // desc.setSize(200, 30);
+    // desc.setLocation(10, 50);
+
+    // rightPanel.add(title);
+    // rightPanel.add(desc);
+
+    // container.add(rightPanel);
+    // }
+
+    public void rightPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBackground(Color.WHITE);
+
+        // Judul Mata Kuliah
+        title.setText(matkulList.getSelectedValue());
         title.setFont(new Font("Calibri", Font.BOLD, 30));
         title.setSize(300, 50);
         title.setLocation(10, 0);
 
-        desc.setText("Deskripsi Wiki untuk " + countryList.getSelectedValue());
-        desc.setSize(200, 30);
-        desc.setLocation(10, 50);
+        // Sub-Bab Mata Kuliah
+        ArrayList<JLabel> subBab = new ArrayList<JLabel>();
+        subBab.add(setGetSubBabLabel("Topik 1"));
+        subBab.add(setGetSubBabLabel("Topik 2"));
+        subBab.add(setGetSubBabLabel("Topik 3"));
+        subBab.add(setGetSubBabLabel("Topik 4"));
 
-        rightPanel.add(title);
-        rightPanel.add(desc);
+        panel.add(title);
+        JLabel text = new JLabel();
+        text.setText("Topik");
+        panel.add(text);
+        panel.add(subBab.get(0));
 
-        container.add(rightPanel);
+        int i = 0;
+
+        for (JLabel l : subBab) {
+
+            l.setLocation(10, 50 + i);
+            i += 40;
+            panel.add(l);
+
+        }
+
+        container.add(panel);
+
+    }
+
+    JLabel setGetSubBabLabel(String title) {
+        JLabel subBab = new JLabel();
+        subBab.setFont(new Font("Calibri", Font.BOLD, 18));
+        subBab.setText(title);
+        subBab.setForeground(Color.BLUE.darker());
+        subBab.setSize(200, 30);
+        subBab.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        subBab.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                new DetailPage(title, matkulList.getSelectedValue());
+            }
+        });
+
+        return subBab;
     }
 
     public void menuBar() {
@@ -99,35 +152,30 @@ public class MainPage extends JFrame implements ActionListener {
         leftPanel.setMaximumSize(leftPanel.getPreferredSize());
         leftPanel.setMinimumSize(leftPanel.getPreferredSize());
         leftPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                "Category"));
+                "Mata Kuliah"));
 
         // create the model and add elements
         DefaultListModel<String> listModel = new DefaultListModel<>();
-        listModel.clear();
+        listModel.addElement("Category A");
+        listModel.addElement("Category B");
+        listModel.addElement("Category C");
+        listModel.addElement("Category D");
+        listModel.addElement("Category E");
+        listModel.addElement("Category F");
+        listModel.addElement("Category G");
+        listModel.addElement("Category H");
 
-        CourseController controller = new CourseController();
-        List<Course> courses = controller.getAllCourses();
-
-        for (Course course : courses) {
-            String name = course.getName();
-            String description = course.getDescription();
-            
-            System.out.println("Course Name: " + name);
-            System.out.println("Course Description: " + description);
-            
-            listModel.addElement(name + ": " + description); // Add both name and description to the listModel
-        }
         // create the list
-        countryList = new JList<>(listModel);
-        countryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        countryList.setSelectedIndex(0);
-        countryList.setFixedCellHeight(30);
-        countryList.setFixedCellWidth(180);
+        matkulList = new JList<>(listModel);
+        matkulList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        matkulList.setSelectedIndex(0);
+        matkulList.setFixedCellHeight(30);
+        matkulList.setFixedCellWidth(180);
 
         goBtn.addActionListener(this);
 
-        leftPanel.add(countryList);
-        leftPanel.add(new JScrollPane(countryList));
+        leftPanel.add(matkulList);
+        leftPanel.add(new JScrollPane(matkulList));
         leftPanel.add(goBtn);
 
         container.add(leftPanel);
@@ -148,18 +196,7 @@ public class MainPage extends JFrame implements ActionListener {
                 title.setText(countryList.getSelectedValue());
                 desc.setText("Deskripsi Wiki untuk " + countryList.getSelectedValue());
                 System.out.println(countryList.getSelectedValue());
-    
-                // Fetch all WikiPages and display them
-                WikiPageController controller = new WikiPageController();
-                List<WikiPage> wikiPages = controller.getAllWikiPages();
-
-                // Handle the retrieved list of WikiPages as needed
-                for (WikiPage wikiPage : wikiPages) {
-                    // Process each WikiPage (you might display them or perform other operations)
-                    System.out.println("Title: " + wikiPage.getTitle() + ", Content: " + wikiPage.getContent());
-                }
             }
         }
-        
     }
 }
