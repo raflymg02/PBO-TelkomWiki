@@ -99,14 +99,15 @@ public class MainPage extends JFrame implements ActionListener {
         subBab.add(setGetSubBabLabel("Topik 3"));
         subBab.add(setGetSubBabLabel("Topik 4"));
 
-        String selectedCourseName = matkulList.getSelectedValue();
-        List<WikiPage> wikiPages = controller.getWikiPagesByCourseName(selectedCourseName);
+        // TODO : Doesn't Work, Button Go Clicked Worked Though
+        // String selectedCourseName = matkulList.getSelectedValue();
+        // List<WikiPage> wikiPages = controller.getWikiPagesByCourseName(selectedCourseName);
 
-        for (WikiPage wikiPage : wikiPages) {
-            // Process retrieved wiki pages here
-            System.out.println("WikiPage Title: " + wikiPage.getTitle());
-            System.out.println("WikiPage Content: " + wikiPage.getContent());
-        }
+        // for (WikiPage wikiPage : wikiPages) {
+        //     // Process retrieved wiki pages here
+        //     System.out.println("WikiPage Title: " + wikiPage.getTitle());
+        //     System.out.println("WikiPage Content: " + wikiPage.getContent());
+        // }
         
 
         panel.add(title);
@@ -200,6 +201,7 @@ public class MainPage extends JFrame implements ActionListener {
 
         container.add(leftPanel);
     }
+    
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -216,15 +218,17 @@ public class MainPage extends JFrame implements ActionListener {
                 title.setText(matkulList.getSelectedValue());
                 desc.setText("Deskripsi Wiki untuk " + matkulList.getSelectedValue());
                 System.out.println(matkulList.getSelectedValue());
+
+                // TODO : Get WikiPages by Course Name -> To Show in Right Panel (Click Struktur Data to Test)
                 String selectedCourseName = matkulList.getSelectedValue();
                 List<WikiPage> wikiPages = controller.getWikiPagesByCourseName(selectedCourseName);
-
                 for (WikiPage wikiPage : wikiPages) {
-                    // Process retrieved wiki pages here
                     System.out.println("WikiPage Title: " + wikiPage.getTitle());
                     System.out.println("WikiPage Content: " + wikiPage.getContent());
                 }
             }
         }
     }
+
+    
 }

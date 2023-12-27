@@ -23,9 +23,12 @@ public class SearchPage implements ActionListener {
     JLabel label = new JLabel("Search Wiki: ");
     JTextField textField = new JTextField();
     JButton submitBtn = new JButton("Find");
+    JRadioButton r1, r2;
 
     SearchPage() {
+
         textField.setPreferredSize(new Dimension(250, 20));
+
         submitBtn.addActionListener(this);
 
         frame.add(label);
@@ -57,30 +60,57 @@ public class SearchPage implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == submitBtn) {
-            // Buat ngambil teks di Textfield
-            String searchText = textField.getText();
-            System.out.println(searchText);
+            if (r1.isSelected() || r2.isSelected()) {
+                // Buat ngambil teks di Textfield
 
+                String searchText = textField.getText();
+                System.out.println(searchText);
 
-            WikiPageController controller = new WikiPageController();
-            
-            WikiPage wikiPage = controller.searchWikiPageByTitle(searchText);
+                WikiPageController controller = new WikiPageController();
 
+                WikiPage wikiPage = controller.searchWikiPageByTitle(searchText);
+
+                // TEST CODE - Check if Search is Working (Works when Materi == Mata Kuliah)
+                if (wikiPage != null) {
+                    // Display retrieved WikiPage details
+                    displayWikiPageDetails(wikiPage);
+                } else {
+                    JOptionPane.showMessageDialog(frame,
+                            "No data found for the title: " + searchText,
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+
+            } else {
+                System.out.println("Pilih Opsi Di Kiri!");
+            }
             // Example Implementation
             // if (wikiPage != null) {
-            //     JOptionPane.showMessageDialog(frame,
-            //             "Title: " + wikiPage.getTitle() + "\n" +
-            //             "Content: " + wikiPage.getContent() + "\n" +
-            //             "Created At: " + wikiPage.getCreatedAt() + "\n" +
-            //             "Updated At: " + wikiPage.getUpdatedAt(),
-            //             "Wiki Page Details",
-            //             JOptionPane.INFORMATION_MESSAGE);
+            // JOptionPane.showMessageDialog(frame,
+            // "Title: " + wikiPage.getTitle() + "\n" +
+            // "Content: " + wikiPage.getContent() + "\n" +
+            // "Created At: " + wikiPage.getCreatedAt() + "\n" +
+            // "Updated At: " + wikiPage.getUpdatedAt(),
+            // "Wiki Page Details",
+            // JOptionPane.INFORMATION_MESSAGE);
             // } else {
-            //     JOptionPane.showMessageDialog(frame,
-            //             "No data found for the title: " + searchText,
-            //             "Error",
-            //             JOptionPane.ERROR_MESSAGE);
+            // JOptionPane.showMessageDialog(frame,
+            // "No data found for the title: " + searchText,
+            // "Error",
+            // JOptionPane.ERROR_MESSAGE);
             // }
         }
+    }
+    // TEST CODE - Check if Search is Working
+    private void displayWikiPageDetails(WikiPage wikiPage) {
+        String message = "Title: " + wikiPage.getTitle() + "\n" +
+                "Content: " + wikiPage.getContent() + "\n" +
+                "Created At: " + wikiPage.getCreatedAt() + "\n" +
+                "Updated At: " + wikiPage.getUpdatedAt();
+
+        JOptionPane.showMessageDialog(frame,
+                message,
+                "Wiki Page Details",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 }
