@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+    <!-- Database connection settings -->
+    <session-factory>
+        <!-- Database connection URL, username, and password -->
+        <property name="hibernate.connection.url">jdbc:mysql://pbo.akunerio.com:3306/pbo-db-one</property>
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.username">pbo-user-one</property>
+        <property name="hibernate.connection.password">pbo-pass-one-01</property>
+
+        <!-- Hibernate dialect for MySQL -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+
+        <!-- Show SQL queries in console for debugging purposes -->
+        <property name="hibernate.show_sql">true</property>
+
+        <!-- Auto create/update database tables based on entity mappings -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        
+        <!-- Mapping configuration -->
+        <!-- Add all your entity mappings here -->
+        <mapping class="Model.Database" />
+        <mapping class="Model.WikiPage" />
+        <mapping class="Model.Tag" />
+        <!-- Add other entity mappings as needed -->
+
+    </session-factory>
+</hibernate-configuration>
