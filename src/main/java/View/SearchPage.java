@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -14,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import Controller.TagController;
 import Controller.WikiPageController;
 import Model.WikiPage;
 
@@ -66,14 +68,24 @@ public class SearchPage implements ActionListener {
                 String searchText = textField.getText();
                 System.out.println(searchText);
 
-                WikiPageController controller = new WikiPageController();
+                WikiPageController wikiPageController = new WikiPageController();
+                TagController tagController = new TagController();
 
-                WikiPage wikiPage = controller.searchWikiPageByTitle(searchText);
+                WikiPage wikiPage = wikiPageController.searchWikiPageByTitle(searchText);
+                List<WikiPage> wikiPages = tagController.fetchWikiPageByTag(searchText);
+
+                for (WikiPage Page : wikiPages) {
+                    System.out.println(Page.getTitle());
+                }
+                
 
                 // TEST CODE - Check if Search is Working (Works when Materi == Mata Kuliah)
                 if (wikiPage != null) {
-                    // Display retrieved WikiPage details
-                    displayWikiPageDetails(wikiPage);
+                    // DISPLAY IF MATERI FOUND
+                    // displayWikiPageDetails(wikiPage);
+
+                    // DISPLAY IF TAG SEARCH FOUND
+                    // displayWikiPageLiist(wikiPages);
                 } else {
                     JOptionPane.showMessageDialog(frame,
                             "No data found for the title: " + searchText,
@@ -101,7 +113,10 @@ public class SearchPage implements ActionListener {
             // }
         }
     }
-    // TEST CODE - Check if Search is Working
+
+
+
+    // TEST CODE - Check if Search  is working
     private void displayWikiPageDetails(WikiPage wikiPage) {
         String message = "Title: " + wikiPage.getTitle() + "\n" +
                 "Content: " + wikiPage.getContent() + "\n" +
@@ -113,4 +128,20 @@ public class SearchPage implements ActionListener {
                 "Wiki Page Details",
                 JOptionPane.INFORMATION_MESSAGE);
     }
+
+    private void displayWikiPageLiist(List<WikiPage> wikiPages) {
+        StringBuilder message = new StringBuilder();
+        for (WikiPage wikiPage : wikiPages) {
+            message.append("Title: ").append(wikiPage.getTitle()).append("\n");
+        }
+    
+        JOptionPane.showMessageDialog(frame,
+                message.toString(),
+                "Wiki Page Details",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+
+    
+    
 }

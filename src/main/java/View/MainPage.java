@@ -27,6 +27,7 @@ import javax.swing.ListSelectionModel;
 
 import Controller.CourseController;
 import Controller.TagController;
+import Controller.WikiPageController;
 import Model.Course;
 import Model.Tag;
 import Model.WikiPage;
@@ -46,10 +47,15 @@ public class MainPage extends JFrame implements ActionListener {
     // Connect to Controller
     CourseController courseController;
     TagController tagController;
+    WikiPageController wikiPageController;
 
     MainPage() {
-        courseController = new CourseController(); // Initialize the controller
-        tagController = new TagController(); // Initialize the controller
+        // Initialize the controller
+        courseController = new CourseController(); 
+        tagController = new TagController();
+        wikiPageController = new WikiPageController(); 
+
+        // Initialize the frame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Telkom Wiki");
         setSize(800, 600);
@@ -105,7 +111,7 @@ public class MainPage extends JFrame implements ActionListener {
 
         // TODO : Doesn't Work, Button Go Clicked Worked Though
         // String selectedCourseName = matkulList.getSelectedValue();
-        // List<WikiPage> wikiPages = controller.getWikiPagesByCourseName(selectedCourseName);
+        // List<WikiPage> wikiPages = courseController.getWikiPagesByCourseName(selectedCourseName);
 
         // for (WikiPage wikiPage : wikiPages) {
         //     // Process retrieved wiki pages here
@@ -233,8 +239,7 @@ public class MainPage extends JFrame implements ActionListener {
                     System.out.println("WikiPage Content: " + wikiPage.getContent());
 
                     // Get Tags by WikiPage
-                    String pageName = wikiPage.getTitle();
-                    List<Tag> tags = tagController.getTagsByWikiPage(pageName);
+                    List<Tag> tags = tagController.fetchTagsByWikiPageTitle(wikiPage.getTitle());
                         for (Tag tag : tags) {
                             System.out.println("Tag Name: " + tag.getName());
                             System.out.println("Tag Description: " + tag.getDescription());

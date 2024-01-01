@@ -6,6 +6,7 @@ import java.util.List;
 import Model.Database;
 import Model.Searchable;
 import Model.Tag;
+import Model.WikiPage;
 
 public class TagController implements Searchable {
     private final Database database;
@@ -25,7 +26,11 @@ public class TagController implements Searchable {
         return resultList;
     }
 
-    public List<Tag> fetchTagsByWikiPage(String wikiPageTitle) {
+    public List<Tag> fetchTagsByWikiPageTitle(String wikiPageTitle) {
         return database.fetchTagsByWikiPage(wikiPageTitle);
+    }
+
+    public List<WikiPage> fetchWikiPageByTag(String tagName) {
+        return database.fetchWikiPageByTag(tagName);
     }
 }

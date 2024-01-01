@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,7 +118,6 @@ public class Database {
                     WikiPage wikiPage = new WikiPage();
                     wikiPage.setTitle(wikiResult.getString("title"));
                     wikiPage.setContent(wikiResult.getString("content"));
-                    // Set other attributes as needed
 
                     wikiPages.add(wikiPage);
                 }
@@ -166,14 +167,14 @@ public class Database {
     
         try (Connection connection = DriverManager.getConnection(jdbcURL, username, password)) {
             String query = "SELECT Tag.* FROM Tag " +
-                    "INNER JOIN Tagged ON Tag.tagID = Tagged.tag_id " +
-                    "INNER JOIN Wiki ON Wiki.id = Tagged.wiki_id " +
-                    "WHERE Wiki.title = ?";
+                    "INNER JOIN Tagged ON Tag.tagID = Tagged.tagId " +
+                    "INNER JOIN WikiPage ON WikiPage.id = Tagged.wikiId " +
+                    "WHERE WikiPage.title = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, wikiPageTitle);
     
             ResultSet resultSet = preparedStatement.executeQuery();
-    
+            
             while (resultSet.next()) {
                 String tagName = resultSet.getString("tagName");
                 String tagDescription = resultSet.getString("tagDescription");
@@ -189,6 +190,46 @@ public class Database {
     
         return tags;
     }
+
+    public List<WikiPage> fetchWikiPageByTag(String tagName) {
+        List<WikiPage> wikiPages = new ArrayList<>();
+    
+        try (Connection connection = DriverManager.getConnection(jdbcURL, username, password)) {
+            String query =
+                "SELECT WikiPage.* FROM WikiPage " +
+                "INNER JOIN Tagged ON WikiPage.id = Tagged.wikiId " +
+                "INNER JOIN Tag ON Tagged.tagId = Tag.tagID " +
+                "WHERE Tag.tagName = ?";
+    
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, tagName);
+    
+            ResultSet resultSet = preparedStatement.executeQuery();
+    
+            while (resultSet.next()) {
+                // Retrieve necessary data for WikiPage objects
+
+                String title = resultSet.getString("title");
+                String content = resultSet.getString("content");
+                Timestamp createdAtTimestamp = resultSet.getTimestamp("createdAt");
+                LocalDateTime createdAt = createdAtTimestamp.toLocalDateTime();
+
+                Timestamp updatedAtTimestamp = resultSet.getTimestamp("updatedAt");
+                LocalDateTime updatedAt = updatedAtTimestamp.toLocalDateTime();
+                
+                WikiPage wikiPage = new WikiPage(title, content, createdAt, updatedAt);
+    
+                wikiPages.add(wikiPage);
+            }
+    
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return wikiPages;
+    }
+    
     
     
     

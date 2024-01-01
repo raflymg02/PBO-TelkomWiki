@@ -26,12 +26,12 @@ public class WikiPage {
     private Long id; // Primary key
 
     private String title, content;
-    private final LocalDateTime createdAt;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     // Default constructor (no-argument constructor) required by Hibernate
     public WikiPage() {
-        this.createdAt = LocalDateTime.now();
+        // Do nothing because of Hibernate
     }
 
     public WikiPage(String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
