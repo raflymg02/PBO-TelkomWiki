@@ -198,7 +198,7 @@ public class Database {
             String query =
                 "SELECT WikiPage.* FROM WikiPage " +
                 "INNER JOIN Tagged ON WikiPage.id = Tagged.wikiId " +
-                "INNER JOIN Tag ON Tagged.tagId = Tag.tagID " +
+                "INNER JOIN Tag ON Tag.tagId = Tagged.tagID " +
                 "WHERE Tag.tagName = ?";
     
             PreparedStatement preparedStatement = connection.prepareStatement(query);

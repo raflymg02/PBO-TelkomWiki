@@ -38,7 +38,7 @@ public class SearchPage implements ActionListener {
 
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
-        r1 = new JRadioButton("Mata Kuliah");
+        r1 = new JRadioButton("Tag");
         r2 = new JRadioButton("Materi");
         r1.setBounds(75, 50, 100, 30);
         r2.setBounds(75, 100, 100, 30);
@@ -70,8 +70,11 @@ public class SearchPage implements ActionListener {
 
                 WikiPageController wikiPageController = new WikiPageController();
                 TagController tagController = new TagController();
-
+                
+                // SEARCH FOR MATERI
                 WikiPage wikiPage = wikiPageController.searchWikiPageByTitle(searchText);
+
+                // SEARCH FOR TAG
                 List<WikiPage> wikiPages = tagController.fetchWikiPageByTag(searchText);
 
                 for (WikiPage Page : wikiPages) {
@@ -80,12 +83,11 @@ public class SearchPage implements ActionListener {
                 
 
                 // TEST CODE - Check if Search is Working (Works when Materi == Mata Kuliah)
-                if (wikiPage != null) {
-                    // DISPLAY IF MATERI FOUND
-                    // displayWikiPageDetails(wikiPage);
-
-                    // DISPLAY IF TAG SEARCH FOUND
-                    // displayWikiPageLiist(wikiPages);
+                
+                if (wikiPage != null && r2.isSelected()) { // DISPLAY IF MATERI FOUND (To Check = Linked List)
+                    displayWikiPageDetails(wikiPage);
+                } else if (wikiPages != null  && r1.isSelected()) { // DISPLAY IF TAG FOUND (To Check = #Difficulty/Beginner)
+                    displayWikiPageLiist(wikiPages);
                 } else {
                     JOptionPane.showMessageDialog(frame,
                             "No data found for the title: " + searchText,
