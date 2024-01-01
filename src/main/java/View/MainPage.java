@@ -26,7 +26,9 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import Controller.CourseController;
+import Controller.TagController;
 import Model.Course;
+import Model.Tag;
 import Model.WikiPage;
 
 public class MainPage extends JFrame implements ActionListener {
@@ -42,10 +44,12 @@ public class MainPage extends JFrame implements ActionListener {
     JButton goBtn = new JButton("Go");
 
     // Connect to Controller
-    CourseController controller;
+    CourseController courseController;
+    TagController tagController;
 
     MainPage() {
-        controller = new CourseController(); // Initialize the controller
+        courseController = new CourseController(); // Initialize the controller
+        tagController = new TagController(); // Initialize the controller
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Telkom Wiki");
         setSize(800, 600);
@@ -179,12 +183,14 @@ public class MainPage extends JFrame implements ActionListener {
         listModel.clear();
 
         CourseController controller = new CourseController();
-        List<Course> courses = controller.getAllCourses();
+        List<Object> data = controller.getAllData();
 
-        for (Course course : courses) {
-            listModel.addElement(course.getName()); // Add both name and description to the listModel
+        for (Object obj : data) {
+            if (obj instanceof Course) {
+                Course course = (Course) obj; 
+                listModel.addElement(course.getName());
+            }
         }
-        // creat
 
         // create the list
         matkulList = new JList<>(listModel);
@@ -221,11 +227,22 @@ public class MainPage extends JFrame implements ActionListener {
 
                 // TODO : Get WikiPages by Course Name -> To Show in Right Panel (Click Struktur Data to Test)
                 String selectedCourseName = matkulList.getSelectedValue();
-                List<WikiPage> wikiPages = controller.getWikiPagesByCourseName(selectedCourseName);
+                List<WikiPage> wikiPages = courseController.getWikiPagesByCourseName(selectedCourseName);
                 for (WikiPage wikiPage : wikiPages) {
                     System.out.println("WikiPage Title: " + wikiPage.getTitle());
                     System.out.println("WikiPage Content: " + wikiPage.getContent());
+
+                    // Get Tags by WikiPage
+                    String pageName = wikiPage.getTitle();
+                    List<Tag> tags = tagController.getTagsByWikiPage(pageName);
+                        for (Tag tag : tags) {
+                            System.out.println("Tag Name: " + tag.getName());
+                            System.out.println("Tag Description: " + tag.getDescription());
+                    }
                 }
+
+                
+
             }
         }
     }

@@ -41,6 +41,12 @@ public class WikiPage {
         this.updatedAt = updatedAt;
     }
 
+    // getter and setter for id
+    public Long getId() {
+        return id;
+    }
+    
+
     public String getTitle() {
         return title;
     }

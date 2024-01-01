@@ -131,6 +131,66 @@ public class Database {
 
         return wikiPages;
     }
+
+    /* ============================================ TAG CLASS ============================================ */
+
+    public List<Tag> fetchAllTags() {
+        List<Tag> tags = new ArrayList<>();
+    
+        try (Connection connection = DriverManager.getConnection(jdbcURL, username, password)) {
+            String query = "SELECT * FROM Tag";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+    
+            ResultSet resultSet = preparedStatement.executeQuery();
+    
+            while (resultSet.next()) {
+                String tagName = resultSet.getString("tagName");
+                String tagDescription = resultSet.getString("tagDescription");
+    
+                Tag tag = new Tag(tagName, tagDescription);
+                tags.add(tag);
+            }
+    
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        
+    
+        return tags;
+    }
+    
+    public List<Tag> fetchTagsByWikiPage(String wikiPageTitle) {
+        List<Tag> tags = new ArrayList<>();
+    
+        try (Connection connection = DriverManager.getConnection(jdbcURL, username, password)) {
+            String query = "SELECT Tag.* FROM Tag " +
+                    "INNER JOIN Tagged ON Tag.tagID = Tagged.tag_id " +
+                    "INNER JOIN Wiki ON Wiki.id = Tagged.wiki_id " +
+                    "WHERE Wiki.title = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, wikiPageTitle);
+    
+            ResultSet resultSet = preparedStatement.executeQuery();
+    
+            while (resultSet.next()) {
+                String tagName = resultSet.getString("tagName");
+                String tagDescription = resultSet.getString("tagDescription");
+    
+                Tag tag = new Tag(tagName, tagDescription);
+                tags.add(tag);
+            }
+    
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return tags;
+    }
+    
+    
     
     
     
