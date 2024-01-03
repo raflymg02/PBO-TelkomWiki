@@ -20,7 +20,7 @@ public class CourseController implements Searchable {
         List<Object> resultList = new ArrayList<>();
 
         for (Course course : Courses) {
-            resultList.add((Object) course); // Explicitly cast WikiPage to Object
+            resultList.add((Object) course); 
         }
         return resultList;
     }

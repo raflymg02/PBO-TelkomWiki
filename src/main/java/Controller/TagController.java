@@ -20,7 +20,7 @@ public class TagController implements Searchable {
         List<Object> resultList = new ArrayList<>();
 
         for (Tag tag : tags) {
-            resultList.add((Object) tag); // Explicitly cast WikiPage to Object
+            resultList.add((Object) tag);
         }
 
         return resultList;

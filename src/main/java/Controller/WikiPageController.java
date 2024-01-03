@@ -21,7 +21,7 @@ public class WikiPageController implements Searchable {
         List<Object> resultList = new ArrayList<>();
 
         for (WikiPage wikiPage : wikiPages) {
-            resultList.add((Object) wikiPage); // Explicitly cast WikiPage to Object
+            resultList.add((Object) wikiPage); 
         }
 
         return resultList;
