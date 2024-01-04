@@ -33,7 +33,9 @@ public class Database {
         return DriverManager.getConnection(jdbcURL, username, password);
     }
 
-    // Method to fetch all WikiPages using Hibernate
+    /* ============================================ WIKIPAGE CLASS ============================================ */
+
+
     public List<WikiPage> fetchWikiPages() {
         try (Session session = sessionFactory.openSession()) {
             Query<WikiPage> query = session.createQuery("FROM WikiPage", WikiPage.class);
@@ -41,10 +43,9 @@ public class Database {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return List.of(); // Return an empty list using Java 9+ List.of()
+        return List.of(); 
     }
 
-    // Method to save or update a WikiPage using Hibernate
     public void saveOrUpdateWikiPage(WikiPage wikiPage) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
@@ -55,7 +56,7 @@ public class Database {
         }
     }
 
-    // Method to fetch a WikiPage by its title using Hibernate
+
     public WikiPage fetchWikiPageByTitle(String title) {
         try (Session session = sessionFactory.openSession()) {
             Query<WikiPage> query = session.createQuery("FROM WikiPage WHERE title = :title", WikiPage.class);
@@ -65,11 +66,14 @@ public class Database {
             e.printStackTrace();
         }
         return null;
+        
     }
+
+    /* ============================================ COURSE CLASS ============================================ */
 
     public List<Course> fetchAllCourses() {
         List<Course> courses = new ArrayList<>();
-        String sql = "SELECT * FROM Course"; // Define the SQL query
+        String sql = "SELECT * FROM Course"; 
     
         try (Connection connection = DriverManager.getConnection(jdbcURL, username, password);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -114,7 +118,6 @@ public class Database {
                 ResultSet wikiResult = wikiStatement.executeQuery();
 
                 while (wikiResult.next()) {
-                    // Create WikiPage objects based on retrieved data
                     WikiPage wikiPage = new WikiPage();
                     wikiPage.setTitle(wikiResult.getString("title"));
                     wikiPage.setContent(wikiResult.getString("content"));
@@ -132,6 +135,58 @@ public class Database {
 
         return wikiPages;
     }
+
+    public List<Semester> fetchAllSemesters() {
+        List<Semester> semesters = new ArrayList<>();
+        String sql = "SELECT DISTINCT Semester.semesterNo, Semester.semesterDescription " +
+                     "FROM Semester " +
+                     "INNER JOIN Course ON Semester.id = Course.semesterId";
+    
+        try (Connection connection = DriverManager.getConnection(jdbcURL, username, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    
+            ResultSet resultSet = preparedStatement.executeQuery();
+    
+            while (resultSet.next()) {
+                String semesterName = resultSet.getString("semesterNo");
+                String semesterDescription = resultSet.getString("semesterDescription");
+                
+                Semester semester = new Semester(semesterDescription, semesterName);
+                semesters.add(semester);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return semesters;
+    }
+    
+
+    public List<Course> fetchCoursesBySemester(String semester) {
+        List<Course> courses = new ArrayList<>();
+        String sql = "SELECT * FROM Course WHERE semesterId = ?";
+    
+        try (Connection connection = DriverManager.getConnection(jdbcURL, username, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    
+            preparedStatement.setString(1, semester);
+            ResultSet resultSet = preparedStatement.executeQuery();
+    
+            while (resultSet.next()) {
+                String code = resultSet.getString("code");
+                String name = resultSet.getString("name");
+                String description = resultSet.getString("description");
+    
+                Course course = new Course(description, name, code);
+                courses.add(course);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return courses;
+    }
+    
 
     /* ============================================ TAG CLASS ============================================ */
 

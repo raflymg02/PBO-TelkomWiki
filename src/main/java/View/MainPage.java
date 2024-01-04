@@ -29,6 +29,7 @@ import Controller.CourseController;
 import Controller.TagController;
 import Controller.WikiPageController;
 import Model.Course;
+import Model.Semester;
 import Model.Tag;
 import Model.WikiPage;
 
@@ -197,6 +198,35 @@ public class MainPage extends JFrame implements ActionListener {
                 listModel.addElement(course.getName());
             }
         }
+
+        List<Object> allSemesters = courseController.fetchAllSemesters();
+
+        for (Object obj : allSemesters) {
+            if (obj instanceof Semester) {
+                Semester semester = (Semester) obj;
+                String semesterName = semester.getName();
+                String semesterId = semesterName.replaceAll("\\D+","");
+                System.out.println("Courses for semester: " + semesterName);
+        
+                // Get courses for the current semester using its identifier
+                List<Course> coursesForSemester = courseController.getCoursesBySemester(semesterId);
+
+                // Print courses
+                if (!coursesForSemester.isEmpty()) {
+                    for (Course course : coursesForSemester) {
+                        System.out.println("Course Name: " + course.getName());
+                        System.out.println("Course Code: " + course.getCode());
+                        System.out.println("Course Description: " + course.getDescription());
+                        System.out.println("---------------------------");
+                    }
+                } else {
+                    System.out.println("No courses found for this semester.");
+                }
+            }
+        }
+
+
+
 
         // create the list
         matkulList = new JList<>(listModel);
