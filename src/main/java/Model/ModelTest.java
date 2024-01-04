@@ -8,8 +8,8 @@ public class ModelTest {
         Course E = new Course("description", "name", "code");
         Semester S = new Semester("desription", "name");
         Tag T = new Tag("name", "desription");
-        WikiPage W = new WikiPage( "title", "content", LocalDateTime.now(), LocalDateTime.now());
-
+        WikiPage W = new WikiPage( "title", "content", LocalDateTime.now(), LocalDateTime.now());    
     }
+    
     
 }
