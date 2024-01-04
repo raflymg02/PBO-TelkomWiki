@@ -5,17 +5,23 @@
  */
 package Model;
 
+
 /**
  *
  * @author ASUS
  */
+// @MappedSuperclass
 public abstract class Organization {
     private String name;
+
+    public Organization() {
+        //
+    }
 
     public Organization(String name) {
         this.name = name;
     }
-
+    
     public String getName() {
         return name;
     }

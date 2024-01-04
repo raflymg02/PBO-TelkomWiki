@@ -1,11 +1,10 @@
 package Model;
 
-import java.sql.Connection;
+import java.util.List;
 
 public interface Searchable {
 
-    void insertWikiPage(Connection conn, WikiPage title);
-    void searchWikiTitle(Connection conn, String title);
+    List<Object> getAllData();
 
     
 }

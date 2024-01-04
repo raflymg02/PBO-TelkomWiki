@@ -6,98 +6,233 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Database implements Searchable {
-    private static final String url = "jdbc:mysql://pbo.akunerio.com:3306/pbo-db-one";
-    private static final String username = "pbo-user-one";
-    private static final String password = "pbo-pass-one-01";
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
-    public Connection connect() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
+public class Database {
+    private final SessionFactory sessionFactory;
+    private final String jdbcURL = "jdbc:mysql://pbo.akunerio.com:3306/pbo-db-one";
+    private final String username = "pbo-user-one";
+    private final String password = "pbo-pass-one-01";
+
+    public Database() {
+        this.sessionFactory = new Configuration().configure("hibernate.cfg.xml")
+                .addAnnotatedClass(WikiPage.class)
+                .addAnnotatedClass(Tag.class)
+                // Add other annotated classes as needed
+                .buildSessionFactory();
     }
 
-    public Object searchDatabase(String dbTable) {
-        try (Connection connection = connect();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + dbTable);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-    
-            if ("Page".equals(dbTable)) {
-                ArrayList<WikiPage> pages = new ArrayList<>();
-                while (resultSet.next()) {
-                    String title = resultSet.getString("title");
-                    String content = resultSet.getString("content");
-                    LocalDateTime createdAt = resultSet.getTimestamp("CreatedAt").toLocalDateTime();
-                    LocalDateTime updatedAt = resultSet.getTimestamp("updatedAt").toLocalDateTime();
-    
-                    WikiPage page = new WikiPage(title, content, createdAt, updatedAt);
-                    pages.add(page);
-                }
-                return pages;
-            } else if ("Tag".equals(dbTable)) {
-                ArrayList<Tag> tags = new ArrayList<>();
-                while (resultSet.next()) {
-                    String tagName = resultSet.getString("tagName");
-                    String tagDesc = resultSet.getString("tagDescription");
-                    Tag tag = new Tag(tagName, tagDesc);
-                    tags.add(tag);
-                }
-                return tags;
-            }
-        } catch (SQLException e) {
+    private Connection getJDBCConnection() throws SQLException {
+        return DriverManager.getConnection(jdbcURL, username, password);
+    }
+
+    // Method to fetch all WikiPages using Hibernate
+    public List<WikiPage> fetchWikiPages() {
+        try (Session session = sessionFactory.openSession()) {
+            Query<WikiPage> query = session.createQuery("FROM WikiPage", WikiPage.class);
+            return query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return List.of(); // Return an empty list using Java 9+ List.of()
+    }
+
+    // Method to save or update a WikiPage using Hibernate
+    public void saveOrUpdateWikiPage(WikiPage wikiPage) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.merge(wikiPage);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Method to fetch a WikiPage by its title using Hibernate
+    public WikiPage fetchWikiPageByTitle(String title) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<WikiPage> query = session.createQuery("FROM WikiPage WHERE title = :title", WikiPage.class);
+            query.setParameter("title", title);
+            return query.uniqueResult();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-    
 
-
-
-    public void insertWikiPage(Connection conn, WikiPage page) {
-        String insertQuery = "INSERT INTO (title, content, created_at, updated_at) VALUES (?, ?, ?, ?)";
+    public List<Course> fetchAllCourses() {
+        List<Course> courses = new ArrayList<>();
+        String sql = "SELECT * FROM Course"; // Define the SQL query
     
-        try (PreparedStatement prst = conn.prepareStatement(insertQuery)) {
-            prst.setString(1, page.getTitle());
-            prst.setString(2, page.getContent());
-            prst.setTimestamp(3, Timestamp.valueOf(page.getCreatedAt()));
-            prst.setNull(4, Types.TIMESTAMP);  // Set updated_at as NULL
+        try (Connection connection = DriverManager.getConnection(jdbcURL, username, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
     
-            int affectedRows = prst.executeUpdate();
+            ResultSet resultSet = preparedStatement.executeQuery();
     
-            // Check the affected rows if needed
-            if (affectedRows > 0) {
-                System.out.println("Data inserted successfully.");
-            } else {
-                System.out.println("Data insertion failed.");
+            // Process the retrieved data and create Course objects
+            while (resultSet.next()) {
+                String code = resultSet.getString("code");
+                String name = resultSet.getString("name");
+                String description = resultSet.getString("description");
+    
+                Course course = new Course(description, name, code);
+                courses.add(course);
             }
-        } catch (SQLException ex) {
-            System.out.println("Database query error: " + ex.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    }
     
-    public void searchWikiTitle(Connection conn, String title) {
-        String sql = "SELECT title, content FROM Page WHERE title = ?";
-        
-        try (PreparedStatement prst = conn.prepareStatement(sql)) {
-            prst.setString(1, title);
-            
-            try (ResultSet rs = prst.executeQuery()) {
-                if (rs.next()) {
-                    String resultTitle = rs.getString("title");
-                    String text = rs.getString("content");
-                    
-                    System.out.println("Title: " + resultTitle);
-                    System.out.println("Content: " + text);
-                } else {
-                    System.out.println("No data found for the title: " + title);
+        return courses;
+    }
+
+    public List<WikiPage> fetchWikiPagesByCourseName(String courseName) {
+        List<WikiPage> wikiPages = new ArrayList<>();
+
+        try (Connection connection = getJDBCConnection()) {
+            // Prepare a PreparedStatement to fetch Course based on name
+            String selectCourseQuery = "SELECT * FROM Course WHERE name = ?";
+            PreparedStatement courseStatement = connection.prepareStatement(selectCourseQuery);
+            courseStatement.setString(1, courseName);
+
+            ResultSet courseResult = courseStatement.executeQuery();
+
+            if (courseResult.next()) {
+                String courseCode = courseResult.getString("code");
+
+                // Prepare a PreparedStatement to fetch WikiPages based on courseId
+                String selectWikiPagesQuery = "SELECT * FROM WikiPage WHERE courseCode = ?";
+                PreparedStatement wikiStatement = connection.prepareStatement(selectWikiPagesQuery);
+                wikiStatement.setString(1, courseCode);
+
+                ResultSet wikiResult = wikiStatement.executeQuery();
+
+                while (wikiResult.next()) {
+                    // Create WikiPage objects based on retrieved data
+                    WikiPage wikiPage = new WikiPage();
+                    wikiPage.setTitle(wikiResult.getString("title"));
+                    wikiPage.setContent(wikiResult.getString("content"));
+
+                    wikiPages.add(wikiPage);
                 }
+
+                wikiStatement.close();
             }
-        } catch (SQLException ex) {
-            System.out.println("Database query error: " + ex.getMessage());
+
+            courseStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
+        return wikiPages;
     }
 
+    /* ============================================ TAG CLASS ============================================ */
+
+    public List<Tag> fetchAllTags() {
+        List<Tag> tags = new ArrayList<>();
+    
+        try (Connection connection = DriverManager.getConnection(jdbcURL, username, password)) {
+            String query = "SELECT * FROM Tag";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+    
+            ResultSet resultSet = preparedStatement.executeQuery();
+    
+            while (resultSet.next()) {
+                String tagName = resultSet.getString("tagName");
+                String tagDescription = resultSet.getString("tagDescription");
+    
+                Tag tag = new Tag(tagName, tagDescription);
+                tags.add(tag);
+            }
+    
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        
+    
+        return tags;
+    }
+    
+    public List<Tag> fetchTagsByWikiPage(String wikiPageTitle) {
+        List<Tag> tags = new ArrayList<>();
+    
+        try (Connection connection = DriverManager.getConnection(jdbcURL, username, password)) {
+            String query = "SELECT Tag.* FROM Tag " +
+                    "INNER JOIN Tagged ON Tag.tagID = Tagged.tagId " +
+                    "INNER JOIN WikiPage ON WikiPage.id = Tagged.wikiId " +
+                    "WHERE WikiPage.title = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, wikiPageTitle);
+    
+            ResultSet resultSet = preparedStatement.executeQuery();
+            
+            while (resultSet.next()) {
+                String tagName = resultSet.getString("tagName");
+                String tagDescription = resultSet.getString("tagDescription");
+    
+                Tag tag = new Tag(tagName, tagDescription);
+                tags.add(tag);
+            }
+    
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return tags;
+    }
+
+    public List<WikiPage> fetchWikiPageByTag(String tagName) {
+        List<WikiPage> wikiPages = new ArrayList<>();
+    
+        try (Connection connection = DriverManager.getConnection(jdbcURL, username, password)) {
+            String query =
+                "SELECT WikiPage.* FROM WikiPage " +
+                "INNER JOIN Tagged ON WikiPage.id = Tagged.wikiId " +
+                "INNER JOIN Tag ON Tag.tagId = Tagged.tagID " +
+                "WHERE Tag.tagName = ?";
+    
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, tagName);
+    
+            ResultSet resultSet = preparedStatement.executeQuery();
+    
+            while (resultSet.next()) {
+                // Retrieve necessary data for WikiPage objects
+
+                String title = resultSet.getString("title");
+                String content = resultSet.getString("content");
+                Timestamp createdAtTimestamp = resultSet.getTimestamp("createdAt");
+                LocalDateTime createdAt = createdAtTimestamp.toLocalDateTime();
+
+                Timestamp updatedAtTimestamp = resultSet.getTimestamp("updatedAt");
+                LocalDateTime updatedAt = updatedAtTimestamp.toLocalDateTime();
+                
+                WikiPage wikiPage = new WikiPage(title, content, createdAt, updatedAt);
+    
+                wikiPages.add(wikiPage);
+            }
+    
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return wikiPages;
+    }
+    
+    
+    
+    
+    
     
 }

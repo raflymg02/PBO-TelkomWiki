@@ -7,15 +7,32 @@ package Model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+
 /**
  *
- * @author ASUS
+ * @author Kelompok 1
  */
+
+@Entity
 public class WikiPage {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; // Primary key
+
     private String title, content;
-    final LocalDateTime createdAt;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    //Tagged tags;
+
+    // Default constructor (no-argument constructor) required by Hibernate
+    public WikiPage() {
+        // Do nothing because of Hibernate
+    }
 
     public WikiPage(String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.title = title;
@@ -23,6 +40,12 @@ public class WikiPage {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+
+    // getter and setter for id
+    public Long getId() {
+        return id;
+    }
+    
 
     public String getTitle() {
         return title;
