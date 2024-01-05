@@ -40,10 +40,7 @@ public class DetailPage extends JFrame {
         tagTitle.setSize(300, 20);
         tagTitle.setLocation(20, 80);
 
-        // deskripsi.setText(
-        // "Ini adalah text yang panjang, sangking panjangnya aku mager ngisi. Dah lah
-        // ya ini mah harusnya tuh Lorem Ipsum blabla gitu. Tapi karena ga hafal aku
-        // ubah aja jadi gini. Dah ya, disini baris kodenya panjang.");
+
         deskripsi.setText(Deskripsi);
         deskripsi.setLineWrap(true);
         deskripsi.setOpaque(false);

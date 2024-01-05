@@ -15,7 +15,7 @@ public class WikiPageController implements Searchable {
     }
 
     // Polymorphism - Explicit Casting
-    // Method to retrieve all WikiPages from the database using Hibernate
+    // Method to retrieve all WikiPages 
     public List<Object> getAllData() {
         List<WikiPage> wikiPages = database.fetchWikiPages();
         List<Object> resultList = new ArrayList<>();
@@ -27,12 +27,7 @@ public class WikiPageController implements Searchable {
         return resultList;
     }
 
-    // Method to insert a new WikiPage into the database using Hibernate
-    public void createWikiPage(WikiPage wikiPage) {
-        database.saveOrUpdateWikiPage(wikiPage);
-    }
-
-    // Method to search for a WikiPage by its title using Hibernate
+    // Method to search for a WikiPage by its title 
     public WikiPage searchWikiPageByTitle(String title) {
         return database.fetchWikiPageByTitle(title);
     }
