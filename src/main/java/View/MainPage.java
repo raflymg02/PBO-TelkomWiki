@@ -44,6 +44,8 @@ public class MainPage extends JFrame implements ActionListener {
     JLabel desc = new JLabel();
     JButton goBtn = new JButton("Go");
 
+    ArrayList<JLabel> subBab = new ArrayList<JLabel>();
+
     // Connect to Controller
     CourseController courseController;
     TagController tagController;
@@ -51,9 +53,9 @@ public class MainPage extends JFrame implements ActionListener {
 
     MainPage() {
         // Initialize the controller
-        courseController = new CourseController(); 
+        courseController = new CourseController();
         tagController = new TagController();
-        wikiPageController = new WikiPageController(); 
+        wikiPageController = new WikiPageController();
 
         // Initialize the frame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -99,57 +101,68 @@ public class MainPage extends JFrame implements ActionListener {
         // Judul Mata Kuliah
         title.setText(matkulList.getSelectedValue());
         title.setFont(new Font("Calibri", Font.BOLD, 30));
-        title.setSize(300, 50);
+        title.setSize(500, 50);
         title.setLocation(10, 0);
 
         // Sub-Bab Mata Kuliah
-        ArrayList<JLabel> subBab = new ArrayList<JLabel>();
-        subBab.add(setGetSubBabLabel("Topik 1"));
-        subBab.add(setGetSubBabLabel("Topik 2"));
-        subBab.add(setGetSubBabLabel("Topik 3"));
-        subBab.add(setGetSubBabLabel("Topik 4"));
+
+        // subBab.add(setGetSubBabLabel("Topik 1"));
+        // subBab.add(setGetSubBabLabel("Topik 2"));
+        // subBab.add(setGetSubBabLabel("Topik 3"));
+        // subBab.add(setGetSubBabLabel("Topik 4"));
 
         // TODO : Doesn't Work, Button Go Clicked Worked Though
         // String selectedCourseName = matkulList.getSelectedValue();
-        // List<WikiPage> wikiPages = courseController.getWikiPagesByCourseName(selectedCourseName);
+        // List<WikiPage> wikiPages =
+        // courseController.getWikiPagesByCourseName(selectedCourseName);
 
         // for (WikiPage wikiPage : wikiPages) {
-        //     // Process retrieved wiki pages here
-        //     System.out.println("WikiPage Title: " + wikiPage.getTitle());
-        //     System.out.println("WikiPage Content: " + wikiPage.getContent());
+        // // Process retrieved wiki pages here
+        // System.out.println("WikiPage Title: " + wikiPage.getTitle());
+        // System.out.println("WikiPage Content: " + wikiPage.getContent());
         // }
-        
 
         panel.add(title);
         JLabel text = new JLabel();
         text.setText("Topik");
+
+        getWikiData(matkulList.getSelectedValue());
+
         panel.add(text);
-        panel.add(subBab.get(0));
+        if (subBab.size() > 0) {
+            panel.add(subBab.get(0));
 
-        int i = 0;
+            int i = 0;
 
-        for (JLabel l : subBab) {
+            for (JLabel l : subBab) {
 
-            l.setLocation(10, 50 + i);
-            i += 40;
-            panel.add(l);
+                l.setLocation(10, 50 + i);
+                i += 40;
+                panel.add(l);
 
+            }
+        } else {
+            // JLabel, belum ada topik tersedia
+            JLabel noTopicLabel = new JLabel();
+            noTopicLabel.setText("Belum ada topik tersedia");
+            noTopicLabel.setFont(new Font("Calibri", Font.BOLD, 18));
+            panel.add(noTopicLabel);
         }
 
         container.add(panel);
 
     }
 
-    JLabel setGetSubBabLabel(String title) {
+    JLabel setGetSubBabLabel(String title, String desc, String tag) {
         JLabel subBab = new JLabel();
         subBab.setFont(new Font("Calibri", Font.BOLD, 18));
         subBab.setText(title);
         subBab.setForeground(Color.BLUE.darker());
-        subBab.setSize(200, 30);
+        subBab.setSize(400, 30);
         subBab.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         subBab.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                new DetailPage(title, matkulList.getSelectedValue());
+                new DetailPage(title, matkulList.getSelectedValue(), desc, tag);
             }
         });
 
@@ -193,7 +206,7 @@ public class MainPage extends JFrame implements ActionListener {
 
         for (Object obj : data) {
             if (obj instanceof Course) {
-                Course course = (Course) obj; 
+                Course course = (Course) obj;
                 listModel.addElement(course.getName());
             }
         }
@@ -213,7 +226,26 @@ public class MainPage extends JFrame implements ActionListener {
 
         container.add(leftPanel);
     }
-    
+
+    // create void for wikiPages
+    public void getWikiData(String mataKuliah) {
+        List<WikiPage> wikiPages = courseController.getWikiPagesByCourseName(mataKuliah);
+        for (WikiPage wikiPage : wikiPages) {
+            System.out.println("WikiPage Title: " + wikiPage.getTitle());
+            System.out.println("WikiPage Content: " + wikiPage.getContent());
+
+            // Get Tags by WikiPage
+            List<Tag> tags = tagController.fetchTagsByWikiPageTitle(wikiPage.getTitle());
+            for (Tag tag : tags) {
+                System.out.println("Tag Name: " + tag.getName());
+                System.out.println("Tag Description: " + tag.getDescription());
+
+                // add to subBab
+                subBab.add(setGetSubBabLabel(wikiPage.getTitle(), wikiPage.getContent(), tag.getName()));
+            }
+        }
+
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -231,26 +263,18 @@ public class MainPage extends JFrame implements ActionListener {
                 desc.setText("Deskripsi Wiki untuk " + matkulList.getSelectedValue());
                 System.out.println(matkulList.getSelectedValue());
 
-                // TODO : Get WikiPages by Course Name -> To Show in Right Panel (Click Struktur Data to Test)
-                String selectedCourseName = matkulList.getSelectedValue();
-                List<WikiPage> wikiPages = courseController.getWikiPagesByCourseName(selectedCourseName);
-                for (WikiPage wikiPage : wikiPages) {
-                    System.out.println("WikiPage Title: " + wikiPage.getTitle());
-                    System.out.println("WikiPage Content: " + wikiPage.getContent());
-
-                    // Get Tags by WikiPage
-                    List<Tag> tags = tagController.fetchTagsByWikiPageTitle(wikiPage.getTitle());
-                        for (Tag tag : tags) {
-                            System.out.println("Tag Name: " + tag.getName());
-                            System.out.println("Tag Description: " + tag.getDescription());
-                    }
-                }
-
-                
-
+                // TODO : Get WikiPages by Course Name -> To Show in Right Panel (Click Struktur
+                // Data to Test)
+                subBab.clear();
+                // getWikiData(matkulList.getSelectedValue());
+                System.out.println(subBab);
+                // Dispose or refresh the void for rightPanel
+                // Dispose the right panel
+                container.remove(1);
+                // Refresh the right panel
+                rightPanel();
             }
         }
     }
 
-    
 }
