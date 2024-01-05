@@ -6,7 +6,7 @@ public class ModelTest {
     public static void main(String[] args) {
         Category cat  = new Category("catdescription", "catname");
         Course course = new Course("coursedescription", "coursename", "coursecode");
-        Semester sem = new Semester("semdesription", "semname");
+        
         Tag tag = new Tag("tagname", "tagdesription");
         WikiPage wiki1 = new WikiPage( "w1title", "w1content", LocalDateTime.now(), LocalDateTime.now());
         WikiPage wiki2 = new WikiPage( "w2title", "w2content", LocalDateTime.now(), LocalDateTime.now());   
@@ -15,7 +15,7 @@ public class ModelTest {
         System.out.println(cat.getName());
         System.out.println(cat.getDescription());
         //System.out.println(cat.getPartof().getName());
-        cat.setPartof(sem);
+        cat.setPartof(cat);
         System.out.println(cat.getPartof().getName());
 
         System.out.println();
@@ -31,10 +31,6 @@ public class ModelTest {
         System.out.println();
         course.removePage(wiki1);
         System.out.println(course.getPageList().get(0).getTitle());
-        
-        System.out.println();
-        sem.addCourse(course);
-        System.out.println(sem.getCourseList().get(0).getCode());
 
         System.out.println(tag.getDescription());
     }
