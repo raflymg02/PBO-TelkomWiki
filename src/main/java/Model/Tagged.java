@@ -8,6 +8,12 @@ public class Tagged {
     private ArrayList<WikiPage> pageList;
     private ArrayList<Tag> tagList;
 
+    public Tagged() {
+        //
+        pageList = new ArrayList<WikiPage>();
+        tagList = new ArrayList<Tag>();
+    }
+
     public ArrayList<WikiPage> getPageList(){
         return pageList;
     }

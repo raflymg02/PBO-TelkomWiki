@@ -18,6 +18,7 @@ public class Category extends Organization{
     public Category (String description, String name){
         super(name);
         this.description = description;
+        pageList = new ArrayList<WikiPage>();
     }
 
 
