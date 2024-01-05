@@ -81,8 +81,6 @@ public class SearchPage implements ActionListener {
                     System.out.println(Page.getTitle());
                 }
                 
-
-                // TEST CODE - Check if Search is Working (Works when Materi == Mata Kuliah)
                 
                 if (wikiPage != null && r2.isSelected()) { // DISPLAY IF MATERI FOUND (To Check = Linked List)
                     displayWikiPageDetails(wikiPage);
@@ -98,21 +96,6 @@ public class SearchPage implements ActionListener {
             } else {
                 System.out.println("Pilih Opsi Di Kiri!");
             }
-            // Example Implementation
-            // if (wikiPage != null) {
-            // JOptionPane.showMessageDialog(frame,
-            // "Title: " + wikiPage.getTitle() + "\n" +
-            // "Content: " + wikiPage.getContent() + "\n" +
-            // "Created At: " + wikiPage.getCreatedAt() + "\n" +
-            // "Updated At: " + wikiPage.getUpdatedAt(),
-            // "Wiki Page Details",
-            // JOptionPane.INFORMATION_MESSAGE);
-            // } else {
-            // JOptionPane.showMessageDialog(frame,
-            // "No data found for the title: " + searchText,
-            // "Error",
-            // JOptionPane.ERROR_MESSAGE);
-            // }
         }
     }
 

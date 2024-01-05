@@ -249,10 +249,6 @@ public class MainPage extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // System.out.println("Hit");
-        // if (e.getSource() == myButton) {
-        // new SearchPage();
-        // } else
         if (e.getSource() == exitItem) {
             System.out.println("Exit");
         } else if (e.getSource() == searchItem) {
@@ -263,8 +259,7 @@ public class MainPage extends JFrame implements ActionListener {
                 desc.setText("Deskripsi Wiki untuk " + matkulList.getSelectedValue());
                 System.out.println(matkulList.getSelectedValue());
 
-                // TODO : Get WikiPages by Course Name -> To Show in Right Panel (Click Struktur
-                // Data to Test)
+                // Data to Test
                 subBab.clear();
                 // getWikiData(matkulList.getSelectedValue());
                 System.out.println(subBab);
